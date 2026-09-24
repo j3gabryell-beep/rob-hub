@@ -1,8 +1,9 @@
 'use strict';
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
 const WHATSAPP = '5581997932766';           // número que recebe os relatos (55 + DDD + número)
 const DATASETS = {
   'yaskawa-dx100': 'yaskawa-dx100.json',
+  'yaskawa-dx100-err': 'yaskawa-dx100-err.json',
   'comau-c5g': 'comau-c5g.json'
 };
 const REPORTS_FILE = 'relatos.json';       // relatos aprovados: { "comau-c5g:59424": [ {nome, data, texto} ] }
@@ -81,6 +82,7 @@ let INDEX = [];                // { k, db, a, name, body }
 let REPORTS = {};
 const t = k => T[lang][k];
 const PT = () => lang === 'pt';
+const label = db => db.controller + (db.kind ? ' · ' + db.kind[lang] : '');
 const fmt = n => n.toLocaleString(PT() ? 'pt-BR' : 'en-US');
 
 /* ---------- severity helpers (per dataset) ---------- */
@@ -161,7 +163,7 @@ function itemHTML(x, showTag) {
   const v = sev(x.db, x.a.l);
   return `<li class="item" data-ref="${x.k}:${esc(x.a.c)}"><span class="dot ${v}"></span><span class="code">${esc(x.a.c)}</span>
     <span class="name">${esc(x.a.n)}<span class="hint">${esc(hint(x.a))}</span></span>
-    ${showTag ? `<span class="tag">${esc(x.db.controller)}</span>` : ''}${CHEV}</li>`;
+    ${showTag ? `<span class="tag">${esc(label(x.db))}</span>` : ''}${CHEV}</li>`;
 }
 
 /* ---------- list view ---------- */
@@ -182,7 +184,7 @@ function renderList() {
       list.innerHTML = `<li class="welcome"><div class="w-title">${esc(code ? t('wTitleCode') : t('wTitleKw'))}</div>
         <p>${esc(code ? t('wTextCode') : t('wTextKw'))}</p>
         <div class="examples">${ex.map(x => `<button class="ex" data-q="${esc(x)}">${esc(x)}</button>`).join('')}</div>
-        <div class="w-stat">${esc(t('wStat')(fmt(INDEX.length), Object.keys(DB).length))}</div></li>`;
+        <div class="w-stat">${esc(t('wStat')(fmt(INDEX.length), new Set(Object.values(DB).map(d => d.controller)).size))}</div></li>`;
       return;
     }
     arr = search($('#q').value);
@@ -208,7 +210,7 @@ function renderDetail(k, code, subSel) {
     <div class="hero-top"><span class="code">${esc(a.c)}</span><span class="pill ${v}">${esc(badge(db, a.l))}</span>
       <button class="fav${isFav ? ' on' : ''}" id="fav" aria-pressed="${isFav}">${STAR(isFav)}</button></div>
     <h1>${esc(a.n)}</h1>${PT() && a.np ? `<p class="np">${esc(a.np)}</p>` : ''}
-    <p class="meta">${esc(db.brand)} · ${esc(db.controller)} · ${esc(t('level'))} ${a.l}${a.p ? ' · ' + esc(t('page')(a.p)) : ''}</p>
+    <p class="meta">${esc(db.brand)} · ${esc(label(db))}${db.kind ? '' : ' · ' + esc(t('level')) + ' ' + a.l}${a.p ? ' · ' + esc(t('page')(a.p)) : ''}</p>
     <div class="reset ${v}"><span>${esc(resetTxt(db, a.l))}</span></div></section>
     <div class="seg dtabs"><button data-dt="details" class="${detailTab === 'details' ? 'active' : ''}">${esc(t('dDetails'))}</button>
       <button data-dt="reports" class="${detailTab === 'reports' ? 'active' : ''}">${esc(t('dReports'))}${reports.length ? `<span class="badge-n">${reports.length}</span>` : ''}</button></div>`;
@@ -254,7 +256,7 @@ function renderDetail(k, code, subSel) {
     rs.onclick = () => {
       store.set('repName', rn.value.trim());
       const msg = `${t('repMsg')}\n` +
-        `Controlador: ${db.brand} ${db.controller}\n` +
+        `Controlador: ${db.brand} ${label(db)}\n` +
         `Alarme: ${a.c}${subSel ? '-' + subSel : ''} — ${a.n}\n` +
         `Nome: ${rn.value.trim()}\n\nRelato:\n${rt.value.trim()}`;
       window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -268,7 +270,7 @@ function route() {
   const m = location.hash.match(/^#\/a\/([a-z0-9-]+)\/(\d+)(?:\/(\d+))?/);
   const detail = !!(m && DB[m[1]]);
   $('#view-search').hidden = detail; $('#view-detail').hidden = !detail; $('#back').hidden = !detail;
-  $('#title').textContent = detail ? `${DB[m[1]].controller} · ${m[2]}` : 'ROB HUB';
+  $('#title').textContent = detail ? `${label(DB[m[1]])} · ${m[2]}` : 'ROB HUB';
   document.querySelectorAll('#mode button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
   $('#q').placeholder = mode === 'code' ? t('phCode') : t('phKw');
   $('#q').setAttribute('inputmode', mode === 'code' ? 'numeric' : 'search');
