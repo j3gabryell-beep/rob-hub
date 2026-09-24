@@ -1,6 +1,6 @@
 'use strict';
-const APP_VERSION = '0.1.0';
-const DATASETS = { 'yaskawa-dx100': 'data/yaskawa-dx100.json' };
+const APP_VERSION = '0.1.1';
+const DATASETS = { 'yaskawa-dx100': 'yaskawa-dx100.json' };
 
 const T = {
   pt: {
@@ -67,14 +67,18 @@ function applyLang() {
 async function load() {
   $('#count').textContent = t('loading');
   try {
-    const r = await fetch(DATASETS[ctrl]);
+    const r = await fetch(DATASETS[ctrl], { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     db = await r.json();
     index = db.alarms.map(a => ({
       a, name: norm(a.n),
       body: norm(a.s.map(s => [s.s, s.m, ...s.k.flat()].join(' ')).join(' '))
     }));
     applyLang(); route();
-  } catch (e) { $('#count').textContent = t('loadError'); }
+  } catch (e) {
+    $('#count').textContent = '';
+    $('#list').innerHTML = `<li class="empty" style="color:var(--major)">${esc(t('loadError'))}<br><small>${esc(DATASETS[ctrl])} — ${esc(e.message)}</small></li>`;
+  }
 }
 
 function search(q) {
