@@ -1,9 +1,9 @@
 // ROB HUB service worker — keeps the app and databases available offline.
-const CACHE = 'robhub-v0.1.1';
+const CACHE = 'robhub-v0.3.0';
 const FILES = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest',
   'icon-192.png', 'icon-512.png', 'apple-touch-icon.png',
-  'yaskawa-dx100.json'
+  'yaskawa-dx100.json', 'comau-c5g.json'
 ];
 
 self.addEventListener('install', e => {
