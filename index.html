@@ -17,31 +17,46 @@
 </head>
 <body>
 <header class="top">
-  <button id="back" class="icon-btn" hidden aria-label="Voltar">&#8249;</button>
+  <button id="back" class="icon-btn" hidden aria-label="Voltar">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
   <div class="brand"><span class="logo">RH</span><span id="title">ROB HUB</span></div>
-  <button id="lang" class="chip">EN</button>
+  <button id="lang" class="lang">EN</button>
 </header>
 
 <main id="view-search">
-  <div class="controller">
-    <label for="ctrl" data-i18n="controller">Controlador</label>
-    <select id="ctrl"><option value="yaskawa-dx100">Yaskawa Motoman · DX100</option><option value="comau-c5g">Comau · C5G</option></select>
+  <div class="seg" id="mode" role="tablist">
+    <button data-mode="code" data-i18n="mCode">Código</button>
+    <button data-mode="kw" data-i18n="mKw">Palavras-chave</button>
   </div>
   <div class="searchbox">
+    <svg class="search-ico" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.6-3.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     <input id="q" type="search" inputmode="search" autocomplete="off" autocorrect="off" spellcheck="false">
+    <button id="clear" class="clear" hidden aria-label="Limpar">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
   </div>
-  <div class="tabs">
-    <button class="tab active" data-tab="results" data-i18n="tabResults">Resultados</button>
-    <button class="tab" data-tab="favs" data-i18n="tabFavs">Favoritos</button>
-    <button class="tab" data-tab="recent" data-i18n="tabRecent">Recentes</button>
-  </div>
-  <p id="count" class="muted"></p>
+  <p id="count" class="count"></p>
   <ul id="list" class="list"></ul>
+  <footer class="foot" id="foot"></footer>
 </main>
 
 <main id="view-detail" hidden></main>
 
-<footer class="foot muted" id="foot"></footer>
+<nav class="bottom-nav">
+  <button class="tab active" data-tab="results">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.6-3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span data-i18n="tabResults">Buscar</span>
+  </button>
+  <button class="tab" data-tab="favs">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    <span data-i18n="tabFavs">Favoritos</span>
+  </button>
+  <button class="tab" data-tab="recent">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span data-i18n="tabRecent">Recentes</span>
+  </button>
+</nav>
 <script src="app.js"></script>
 </body>
 </html>
