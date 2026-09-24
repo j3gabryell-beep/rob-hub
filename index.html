@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ROB HUB</title>
+<meta name="description" content="Busca offline de alarmes de robôs industriais">
+<meta name="theme-color" content="#0f1b2d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ROB HUB">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <button id="back" class="icon-btn" hidden aria-label="Voltar">&#8249;</button>
+  <div class="brand"><span class="logo">RH</span><span id="title">ROB HUB</span></div>
+  <button id="lang" class="chip">EN</button>
+</header>
+
+<main id="view-search">
+  <div class="controller">
+    <label for="ctrl" data-i18n="controller">Controlador</label>
+    <select id="ctrl"><option value="yaskawa-dx100">Yaskawa Motoman · DX100</option></select>
+  </div>
+  <div class="searchbox">
+    <input id="q" type="search" inputmode="search" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-tab="results" data-i18n="tabResults">Resultados</button>
+    <button class="tab" data-tab="favs" data-i18n="tabFavs">Favoritos</button>
+    <button class="tab" data-tab="recent" data-i18n="tabRecent">Recentes</button>
+  </div>
+  <p id="count" class="muted"></p>
+  <ul id="list" class="list"></ul>
+</main>
+
+<main id="view-detail" hidden></main>
+
+<footer class="foot muted" id="foot"></footer>
+<script src="app.js"></script>
+</body>
+</html>
